@@ -61,6 +61,10 @@ void perror(void) {
       write(1, "Invalid argument\n", strlen("Invalid argument\n"));
     break;
 
+    case ENOSPC:
+      write(1, "No space left on device\n", strlen("No space left on device\n"));
+    break;
+
     case 0:
       write(1, "No error", strlen("No error"));
     break;

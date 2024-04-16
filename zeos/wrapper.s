@@ -73,7 +73,6 @@ write_error:
     pushl %ebp
     movl %esp, %ebp
     sysenter
-
 gettime_ret:
     popl %ebp
     addl $4, %esp
@@ -84,7 +83,6 @@ gettime_ret:
 
     popl %ebp
     ret
-
 gettime_error:
     negl %eax
     movl %eax, errno
@@ -116,5 +114,31 @@ ret_getpid:
     movl $-1, %eax
 
 getpid_no_error:
+    popl %ebp
+    ret
+
+.globl fork; .type fork, @function; .align 0; fork:
+    pushl %ebp
+    movl %esp, %ebp
+
+    movl $2, %eax
+
+    pushl $ret_fork
+    pushl %ebp
+    movl %esp, %ebp
+
+    sysenter
+
+ret_fork:
+    popl %ebp
+    addl $4, %esp
+
+    cmpl $0, %eax
+    jge fork_no_error
+    negl %eax
+    movl %eax, errno
+    movl $-1, %eax
+
+fork_no_error:
     popl %ebp
     ret

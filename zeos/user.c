@@ -1,5 +1,6 @@
 #include <libc.h>
 
+
 int pid;
 
 char s[20];
@@ -12,20 +13,10 @@ main(void)
   char *buff2 = "\0\0\n";
   /* Next line, tries to move value 0 to CR3 register. This register is a privileged one, and so it will raise an exception */
   /* __asm__ __volatile__ ("mov %0, %%cr3"::"r" (0) ); */
-  write(1, "\nLa syscall write funciona!", strlen("\nLa syscall write funciona!"));
 
-  int t = gettime();
-  itoa(t, s);
-  write(1, "\nTicks actuals:", strlen("\nTicks actuals:"));
-  write(1, s, strlen(s));
 
-  write(1, "\nPID: ", strlen("\nPID: "));
-  itoa(getpid(), buff2);
-  write(1, buff2, strlen(buff2));
-  write(1, "\n", strlen("\n"));
-
-  write(1, "\nGenerem write amb error per comprovar funcio perror:\n", strlen("\nGenerem write amb error per comprovar funció perror: \n"));
-  write(1, "a", -1);
+  fork();
+  write(1, "\nHem executat fork\n", sizeof("\nHem executat fork\n"));
   perror();
 
   while (1)
