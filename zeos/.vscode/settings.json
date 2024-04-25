@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "zeos_interrupt.h": "c",
-        "ostream": "c",
-        "devices.h": "c"
-    }
-}
