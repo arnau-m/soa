@@ -63,3 +63,32 @@ void printk(char *string)
   for (i = 0; string[i]; i++)
     printc(string[i]);
 }
+
+void print_int(int num)
+{
+    char buffer[12]; // Suficientemente grande para representar el número y el signo (si es negativo) y el carácter nulo terminador
+    int i = 0;
+    int is_negative = 0;
+
+    // Manejo de números negativos
+    if (num < 0) {
+        is_negative = 1;
+        num = -num; // Hacemos que el número sea positivo
+    }
+
+    // Convertir el número en una cadena de caracteres
+    do {
+        buffer[i++] = num % 10 + '0'; // Obtener el dígito menos significativo y convertirlo en carácter
+        num /= 10; // Reducir el número
+    } while (num != 0);
+
+    // Añadir el signo negativo si es necesario
+    if (is_negative) {
+        buffer[i++] = '-';
+    }
+
+    // Imprimir los caracteres en orden inverso (debido a cómo se construyó el buffer)
+    while (i > 0) {
+        printc(buffer[--i]);
+    }
+}
