@@ -34,13 +34,13 @@ char char_map[] =
         '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
         '\0', '\0'};
 
-int zeos_ticks = 0;
+int zeos_ticks;
+zeos_ticks = 0;
 
 void clock_routine()
 {
   zeos_show_clock();
   zeos_ticks++;
-
   schedule();
 }
 
@@ -50,9 +50,11 @@ void keyboard_routine()
 
   if (c & 0x80)
   {
-    
-    if (char_map[c & 0x7f] == 'g') cb_get(&cb);
-    else cb_add(&cb, char_map[c & 0x7f]);
+
+    if (char_map[c & 0x7f] == 'a' || char_map[c & 0x7f] == 's' || char_map[c & 0x7f] == 'd' || char_map[c & 0x7f] == 'w')
+    {
+      cb_add(&cb, char_map[c & 0x7f]);
+    }
   }
 }
 
@@ -131,4 +133,5 @@ void setIdt()
 
   // Inicialitzem buffer circular
   cb_init(&cb);
+
 }
