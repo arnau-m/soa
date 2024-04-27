@@ -15,5 +15,6 @@ void printc(char c);
 void printc_xy(Byte x, Byte y, char c);
 void printk(char *string);
 void print_int(int num);
+void cursor_xy(Byte mx, Byte my);
 
 #endif  /* __IO_H__ */

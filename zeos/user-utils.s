@@ -121,3 +121,18 @@ nok:
  js nok
  popl %ebp
  ret
+
+
+.globl gotoxy; .type gotoxy, @function; .align 0; gotoxy:
+ pushl %ebp
+ movl %esp, %ebp
+ pushl %ebx;
+ movl $5, %eax
+ movl 0x8(%ebp), %ebx;
+ movl 0xC(%ebp), %ecx;
+ call syscall_sysenter
+ popl %ebx
+ test %eax, %eax
+ js nok
+ popl %ebp
+ ret

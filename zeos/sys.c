@@ -258,3 +258,13 @@ int sys_read(char *b, int maxchars)
     }
     return i;
 }
+
+int sys_gotoxy(int x, int y)
+{
+    if (x < 80 && x >= 0 && y < 25 && y >= 0)
+    {
+        cursor_xy((Byte)x, (Byte)y);
+        return 1;
+    }
+    else return -1;
+}

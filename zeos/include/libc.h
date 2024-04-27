@@ -30,4 +30,6 @@ int get_stats(int pid, struct stats *st);
 
 int read(char* b, int maxchars);
 
+int gotoxy(int x, int y);
+
 #endif  /* __LIBC_H__ */
