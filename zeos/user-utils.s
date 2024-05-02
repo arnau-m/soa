@@ -136,3 +136,18 @@ nok:
  js nok
  popl %ebp
  ret
+
+
+.globl set_color; .type set_color, @function; .align 0; set_color:
+ pushl %ebp
+ movl %esp, %ebp
+ pushl %ebx;
+ movl $6, %eax
+ movl 0x8(%ebp), %ebx;
+ movl 0xC(%ebp), %ecx;
+ call syscall_sysenter
+ popl %ebx
+ test %eax, %eax
+ js nok
+ popl %ebp
+ ret

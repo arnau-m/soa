@@ -21,6 +21,7 @@ main(void)
     int x = 39;
     int y = 13;
 
+    set_color(2,0);
     gotoxy(x, y);
     write(1, "c", strlen("c"));
 
@@ -40,24 +41,28 @@ main(void)
                     {
                         gotoxy(x,y);
                         write(1, " ", strlen(" "));
+                        set_color(2,0);
                         y--;
                     }
                     else if (buff[i] == 's')
                     {
                         gotoxy(x,y);
                         write(1, " ", strlen(" "));
+                        set_color(3,0);
                         y++;
                     }
                     else if (buff[i] == 'd')
                     {
                         gotoxy(x,y);
                         write(1, " ", strlen(" "));
+                        set_color(4,0);
                         x++;
                     }
                     else if (buff[i] == 'a')
                     {
                         gotoxy(x,y);
                         write(1, " ", strlen(" "));
+                        set_color(6,0);
                         x--;
                     }
                     gotoxy(x, y);

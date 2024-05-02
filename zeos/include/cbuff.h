@@ -1,7 +1,7 @@
 #ifndef _CBUFF_H
 #define _CBUFF_H
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 1024
 
 struct circular_buffer{
     char data[BUFFER_SIZE];

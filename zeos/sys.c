@@ -266,5 +266,17 @@ int sys_gotoxy(int x, int y)
         cursor_xy((Byte)x, (Byte)y);
         return 1;
     }
-    else return -1;
+    else
+        return -1;
+}
+
+int sys_set_color(int fg, int bg)
+{
+    if (fg >= 0 && fg < 8 && bg >= 0 && bg < 8)
+    {
+        chg_color(fg, bg);
+        return 1;
+    }
+    else
+        return 0;
 }

@@ -14,11 +14,6 @@ void cb_add(struct circular_buffer *cb, char c)
     if (cb->write_pos - cb->read_pos < BUFFER_SIZE)
     {
         cb->data[cb->write_pos % BUFFER_SIZE] = c;
-        //printk("\nEl caracter ");
-        //printc(cb->data[cb->write_pos % BUFFER_SIZE]);
-        //printk(" s'ha afegit a la posicio ");
-        //print_int(cb->write_pos % BUFFER_SIZE);
-        //printk(" del buffer circular.\n");
         ++cb->write_pos;
         ++cb->size;
     }
@@ -36,14 +31,5 @@ char cb_get(struct circular_buffer *cb)
     else
     {
         return '\0';
-    }
-}
-
-void cb_print(struct circular_buffer *cbl)
-{
-    for (int i = 0; i < cbl->size; i++)
-    {
-        print_int(cbl->size);
-        cb_get(&cbl);
     }
 }

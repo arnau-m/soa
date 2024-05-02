@@ -16,7 +16,7 @@
  .long sys_read
  .long sys_write
  .long sys_gotoxy
- .long sys_ni_syscall
+ .long sys_set_color
  .long sys_ni_syscall
  .long sys_ni_syscall
  .long sys_ni_syscall

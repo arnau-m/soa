@@ -14,6 +14,8 @@
 #define NUM_ROWS 25
 
 Byte x, y = 19;
+int fg = 0;
+int bg = 0;
 
 /* Read a byte from 'port' */
 Byte inb(unsigned short port)
@@ -34,7 +36,18 @@ void printc(char c)
   }
   else
   {
-    Word ch = (Word)(c & 0x00FF) | 0x0200;
+    /*Colors:
+      0- Negre
+      1- Blau
+      2- Verd
+      3- Blau clar
+      4- Vermell
+      5- Rosa
+      6- Taronja
+      7- Blanc
+    */
+
+    Word ch = (Word)(c & 0x00FF) | (256 * fg + 4096 * bg);
     Word *screen = (Word *)0xb8000;
     screen[(y * NUM_COLUMNS + x)] = ch;
     if (++x >= NUM_COLUMNS)
@@ -68,6 +81,12 @@ void cursor_xy(Byte mx, Byte my)
 {
   x = mx;
   y = my;
+}
+
+void chg_color(int f, int b)
+{
+  fg = f;
+  bg = b;
 }
 
 void print_int(int num)
