@@ -8,6 +8,8 @@ int pid;
 int __attribute__((__section__(".text.main")))
 main(void)
 {
+
+    /*
     int ret_read = 0;
     char buff[5];
 
@@ -23,6 +25,7 @@ main(void)
 
     set_color(2,0);
     gotoxy(x, y);
+    shmem();
     write(1, "c", strlen("c"));
 
     int pid = fork();
@@ -71,6 +74,11 @@ main(void)
             }
         }
     }
+    */
+
+    write(1, "Probem syscall shmat\n", strlen("Probem syscall shmat\n"));
+    shmat(1, 1);
+
     while (1)
     {
     }

@@ -8,6 +8,11 @@
 #include <hardware.h>
 #include <sched.h>
 
+
+
+struct sh_page sh_mem[10];
+
+
 Byte phys_mem[TOTAL_PAGES];
 
 /* SEGMENTATION */
@@ -139,6 +144,7 @@ void init_mm()
   allocate_DIR(&task[0].task);
   set_cr3(get_DIR(&task[0].task));
   set_pe_flag();
+  init_sh_mem();
 }
 /***********************************************/
 /************** SEGMENTATION MANAGEMENT ********/
@@ -190,6 +196,15 @@ void setTSS()
   tss.IOMapBaseAddress   = NULL;
 
   set_task_reg(KERNEL_TSS);
+}
+
+/*Inicialitzem el vector de pagines compartides*/
+int init_sh_mem( void ) {
+  for (int i = 0; i < 10; i++) 
+  {
+    sh_mem[i].idFrame = alloc_frame();
+    sh_mem[i].refs = 0;
+  }
 }
 
  

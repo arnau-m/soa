@@ -15,6 +15,12 @@
 /* Bytemap to mark the free physical pages */
 extern Byte phys_mem[TOTAL_PAGES];
 
+struct sh_page
+{
+  int idFrame;
+  int refs;
+};
+extern struct sh_page sh_mem[10];
 
 extern page_table_entry dir_pages[NR_TASKS][TOTAL_PAGES];
 

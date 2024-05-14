@@ -1,0 +1,16 @@
+MILESTONE 4:
+Pajuelo: 
+    Hem de crear una zona de mem compartia amb un id amb la funció shmat(int id, void* addr), retorna direcció mem lógica on s'ha mapejat. 
+    En temps de boot reservem 10 pàgies físiques, identificades amb un num de 0 al 9, que farem servir per compartir entre processos. Els processos poden 
+    indicar que volen fer servir la pagina compartida amb la funció shmat(), modificant una entrada de la seva taula de pagines (indicada amb el parametre addr) 
+    per a mapejar a la pagina física compartida (identificada amb el paràmetre id).
+
+    S'haura de modificar el fork, exit i ?allocate?
+Notes:
+    - Un cop s'acaba el que fa el init_mm, fer un bucle de 10 iteracions reservant memoria amb allocate i guarda en un vector d'struct de pagines compartides
+      Dintre aquest vector de 10 structs, cada struct tidra un id del frame físic i un contador de referencies per borrar el contingut quan arribi a 0. 
+      L'inicialitzem amb la funció init_sh_mem i la cridem al init_mm.
+    - La rutina sys_shmat fem un set_ss_pag fent servir la taula de pagines de current, l'adreça que en passa l'usuari amb la crida i el frame que obtenim del vector de pagines compartides.
+      TODO: 
+        - Fer checks sobre addr abans de cridar a set_ss_pag: Attach the shared region ‘ID’ to the logical address space of the current process at page aligned address ‘addr’. If this is not 
+          possible, find an empty region. If ‘addr’ is NULL, find an empty address. If ‘addr’ is not page aligned, return an error.

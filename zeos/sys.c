@@ -250,13 +250,13 @@ int sys_get_stats(int pid, struct stats *st)
 
 int sys_read(char *b, int maxchars)
 {
-    //Comprobar errores
+    // Comprobar errores
     if (maxchars < 0)
         return -EINVAL;
-    if (b == NULL) return -EINVAL;
+    if (b == NULL)
+        return -EINVAL;
     if (!access_ok(VERIFY_WRITE, b, maxchars))
         return -EFAULT;
-
 
     int i = 0;
     while (cb.read_pos < cb.write_pos && i < maxchars)
@@ -289,4 +289,14 @@ int sys_set_color(int fg, int bg)
     }
     else
         return 0;
+}
+
+void *sys_shmat(int id, void *addr)
+{
+    if (id < 0 || id > 9)
+        return -EINVAL;
+
+    set_ss_pag(get_PT(current()), addr, sh_mem[id].idFrame);
+    
+    return addr;
 }
