@@ -250,12 +250,22 @@ int sys_get_stats(int pid, struct stats *st)
 
 int sys_read(char *b, int maxchars)
 {
+    //Comprobar errores
+    if (maxchars < 0)
+        return -EINVAL;
+    if (b == NULL) return -EINVAL;
+    if (!access_ok(VERIFY_WRITE, b, maxchars))
+        return -EFAULT;
+
+
     int i = 0;
     while (cb.read_pos < cb.write_pos && i < maxchars)
     {
-        b[i] = cb_get(&cb);
+        char c = cb_get(&cb);
+        copy_to_user(&c, &b[i], sizeof(c));
         i++;
     }
+
     return i;
 }
 

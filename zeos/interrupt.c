@@ -50,11 +50,7 @@ void keyboard_routine()
 
   if (c & 0x80)
   {
-
-    if (char_map[c & 0x7f] == 'a' || char_map[c & 0x7f] == 's' || char_map[c & 0x7f] == 'd' || char_map[c & 0x7f] == 'w')
-    {
-      cb_add(&cb, char_map[c & 0x7f]);
-    }
+    cb_add(&cb, char_map[c & 0x7f]);
   }
 }
 
