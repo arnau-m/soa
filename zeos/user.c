@@ -75,10 +75,15 @@ main(void)
         }
     }
     */
+    set_color(2,0);
 
-    write(1, "Probem syscall shmat\n", strlen("Probem syscall shmat\n"));
-    shmat(1, 1);
 
+    int a = shmat(1, 4096);
+    char buf[8];
+    itoa(a,buff);
+
+    write(1, buff, strlen(buff));
+    
     while (1)
     {
     }

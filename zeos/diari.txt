@@ -5,7 +5,7 @@ Pajuelo:
     indicar que volen fer servir la pagina compartida amb la funció shmat(), modificant una entrada de la seva taula de pagines (indicada amb el parametre addr) 
     per a mapejar a la pagina física compartida (identificada amb el paràmetre id).
 
-    S'haura de modificar el fork, exit i ?allocate?
+    S'haura de modificar el fork, exit i accesOK
 Notes:
     - Un cop s'acaba el que fa el init_mm, fer un bucle de 10 iteracions reservant memoria amb allocate i guarda en un vector d'struct de pagines compartides
       Dintre aquest vector de 10 structs, cada struct tidra un id del frame físic i un contador de referencies per borrar el contingut quan arribi a 0. 

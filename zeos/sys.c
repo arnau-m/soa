@@ -127,6 +127,21 @@ int sys_fork(void)
         copy_data((void *)(pag << 12), (void *)((pag + NUM_PAG_DATA) << 12), PAGE_SIZE);
         del_ss_pag(parent_PT, pag + NUM_PAG_DATA);
     }
+
+    for (pag = NUM_PAG_KERNEL + NUM_PAG_CODE + NUM_PAG_DATA; pag < 1024; pag++)
+    {
+        int frame = get_frame(parent_PT, pag);
+        set_ss_pag(process_PT, pag, frame);
+        for (int i = 0; i < 10; i++)
+        {
+            if (sh_mem[i].idFrame == frame)
+            {
+                sh_mem[i].refs++;
+                break;
+            }
+        }
+    }
+
     /* Deny access to the child's memory space */
     set_cr3(get_DIR(current()));
 
@@ -207,6 +222,23 @@ void sys_exit()
     {
         free_frame(get_frame(process_PT, PAG_LOG_INIT_DATA + i));
         del_ss_pag(process_PT, PAG_LOG_INIT_DATA + i);
+    }
+
+    for (int i = PAG_LOG_INIT_DATA + NUM_PAG_DATA; i < 1024; i++)
+    {
+        int f = get_frame(process_PT, i);
+        if (f != 0)
+        {
+            del_ss_pag(process_PT, i);
+            for (int j = 0; j < 10; j++)
+            {
+                if (sh_mem[j].idFrame == f)
+                {
+                    sh_mem[i].refs--;
+                    break;
+                }
+            }
+        }
     }
 
     /* Free task_struct */
@@ -296,7 +328,36 @@ void *sys_shmat(int id, void *addr)
     if (id < 0 || id > 9)
         return -EINVAL;
 
-    set_ss_pag(get_PT(current()), addr, sh_mem[id].idFrame);
-    
-    return addr;
+    if ((unsigned int)addr % PAGE_SIZE != 0)
+        return -EINVAL;
+    else
+        page_table_entry *pt = get_PT(current());
+
+    int newpage = (int)addr >> 12;
+    int invalidAddr = 0; // definir
+
+    if (addr == NULL || get_frame(pt, newpage) != 0 || newpage > 1023)
+    {
+        int found = 0;
+        for (int pag = NUM_PAG_KERNEL + NUM_PAG_CODE + NUM_PAG_DATA; pag < 1024; pag++)
+        {
+            if (get_frame(pt, pag) == 0)
+            {
+                newpage = pag;
+                found = 1;
+                break;
+            }
+        }
+        if (found == 0)
+        {
+            return -ENOMEM;
+        }
+    }
+
+    set_ss_pag(pt, newpage, sh_mem[id].idFrame);
+    sh_mem[id].refs++;
+
+    print_int(newpage);
+
+    return (void *)(newpage << 12);
 }
