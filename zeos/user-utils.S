@@ -160,3 +160,30 @@ ENTRY(shmat)
 	popl %ebp
 	ret
 
+/*void* shmdt(void* addr)*/
+ENTRY(shmdt)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx;  // Save EBX, ESI and EDI if modified
+	movl $8, %eax			//id 8 = sys_shmdt
+	movl 0x8(%ebp), %ebx;	//*addr
+	call syscall_sysenter
+	popl %ebx
+	test %eax, %eax
+	js nok	// if (eax < 0) -> 
+	popl %ebp
+	ret
+
+/*void* shmrm(int id)*/
+ENTRY(shmrm)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx;  // Save EBX, ESI and EDI if modified
+	movl $9, %eax			//id 9 = sys_shmrm
+	movl 0x8(%ebp), %ebx;	//int id
+	call syscall_sysenter
+	popl %ebx
+	test %eax, %eax
+	js nok	// if (eax < 0) -> 
+	popl %ebp
+	ret

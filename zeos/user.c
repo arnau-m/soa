@@ -78,11 +78,21 @@ main(void)
     set_color(2,0);
 
 
-    int a = shmat(1, 4096);
     char buf[8];
-    itoa(a,buff);
 
+    int a = shmat(1, 4096);
+    itoa(a,buff);
     write(1, buff, strlen(buff));
+
+    int b = shmdt(4090);
+    itoa(b,buff);
+    write(1, buff, strlen(buff));
+
+    int c = shmrm(1);
+    itoa(c,buff);
+    write(1, buff, strlen(buff));
+
+
     
     while (1)
     {

@@ -330,8 +330,8 @@ void *sys_shmat(int id, void *addr)
 
     if ((unsigned int)addr % PAGE_SIZE != 0)
         return -EINVAL;
-    else
-        page_table_entry *pt = get_PT(current());
+
+    page_table_entry *pt = get_PT(current());
 
     int newpage = (int)addr >> 12;
     int invalidAddr = 0; // definir
@@ -360,4 +360,16 @@ void *sys_shmat(int id, void *addr)
     print_int(newpage);
 
     return (void *)(newpage << 12);
+}
+
+int sys_shmdt(void *addr)
+{
+    //TODO codi
+    return 1;
+}
+
+int sys_shmrm(int id)
+{
+    //TODO codi
+    return 1;
 }

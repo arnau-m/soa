@@ -77,26 +77,30 @@ int access_ok(int type, const void *addr, unsigned long size)
   if (addr_fin < addr_ini)
     return 0; // This looks like an overflow ... deny access
 
+  page_table_entry *pt = get_PT(current());
+
   switch (type)
   {
   case VERIFY_WRITE:
     /* Should suppose no support for automodifyable code */
     if ((addr_ini >= USER_FIRST_PAGE + NUM_PAG_CODE) &&
-        (addr_fin <= USER_FIRST_PAGE + NUM_PAG_CODE + NUM_PAG_DATA))
-      return 1;
+        (addr_fin <= USER_FIRST_PAGE + TOTAL_PAGES))
+      for (int i = addr_ini; i < addr_fin; i++)
+      {
+        if (pt[i].bits.present != 1)
+          return 0;
+      }
+    return 1;
   default:
     if ((addr_ini >= USER_FIRST_PAGE) &&
-        (addr_fin <= (USER_FIRST_PAGE + NUM_PAG_CODE + NUM_PAG_DATA)))
-      return 1;
+        (addr_fin <= (USER_FIRST_PAGE + TOTAL_PAGES)))
+      for (int i = addr_ini; i < addr_fin; i++)
+      {
+        if (pt[i].bits.present != 1)
+          return 0;
+      }
+    return 1;
   }
-
-  for (int p = addr_ini; p <= addr_fin; p++)
-  {
-    if (get_frame(get_PT(current()), p) == 0)
-      return 0;
-    
-  }
-
   return 0;
 }
 
