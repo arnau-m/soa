@@ -204,6 +204,7 @@ int init_sh_mem( void ) {
   {
     sh_mem[i].idFrame = alloc_frame();
     sh_mem[i].refs = 0;
+    sh_mem[i].marked = 0;
   }
 }
 

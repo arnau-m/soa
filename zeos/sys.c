@@ -224,21 +224,12 @@ void sys_exit()
         del_ss_pag(process_PT, PAG_LOG_INIT_DATA + i);
     }
 
+    // Deallocate all shared memory
     for (int i = PAG_LOG_INIT_DATA + NUM_PAG_DATA; i < 1024; i++)
     {
         int f = get_frame(process_PT, i);
         if (f != 0)
-        {
-            del_ss_pag(process_PT, i);
-            for (int j = 0; j < 10; j++)
-            {
-                if (sh_mem[j].idFrame == f)
-                {
-                    sh_mem[i].refs--;
-                    break;
-                }
-            }
-        }
+            sys_shmdt(i << 12);
     }
 
     /* Free task_struct */
@@ -334,7 +325,6 @@ void *sys_shmat(int id, void *addr)
     page_table_entry *pt = get_PT(current());
 
     int newpage = (int)addr >> 12;
-    int invalidAddr = 0; // definir
 
     if (addr == NULL || get_frame(pt, newpage) != 0 || newpage > 1023)
     {
@@ -364,12 +354,41 @@ void *sys_shmat(int id, void *addr)
 
 int sys_shmdt(void *addr)
 {
-    //TODO codi
-    return 1;
+    if ((unsigned int)addr % PAGE_SIZE != 0)
+        return -EINVAL;
+
+    page_table_entry *pt = get_PT(current());
+
+    int page = (int)addr >> 12;
+
+    if (addr == NULL || get_frame(pt, page) != 0 || page > 1023)
+    {
+        int f = get_frame(pt, page);
+        for (int j = 0; j < 10; j++)
+        {
+            if (sh_mem[j].idFrame == f)
+            {
+                sh_mem[j].refs--;
+                if (sh_mem[j].refs <= 0 && sh_mem[j].marked)
+                {
+                    char *a = (int)addr;
+                    for (int i = 0; i < 0xfff; ++i)
+                        *(a + i) = 0;
+                }
+
+                return 1;
+            }
+        }
+        del_ss_pag(pt, page);
+        set_cr3(get_DIR(current()));
+    }
+    return 0;
 }
 
 int sys_shmrm(int id)
 {
-    //TODO codi
-    return 1;
+    if (id > 9 || id < 0)
+        return -EINVAL;
+    sh_mem[id].marked = 1;
+    return 0;
 }
