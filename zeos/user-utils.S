@@ -187,3 +187,4 @@ ENTRY(shmrm)
 	js nok	// if (eax < 0) -> 
 	popl %ebp
 	ret
+

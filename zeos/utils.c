@@ -87,7 +87,7 @@ int access_ok(int type, const void *addr, unsigned long size)
         (addr_fin <= USER_FIRST_PAGE + TOTAL_PAGES))
       for (int i = addr_ini; i < addr_fin; i++)
       {
-        if (pt[i].bits.present != 1)
+        if (pt[i].bits.present != 1 || !pt[i].bits.write_t)
           return 0;
       }
     return 1;
