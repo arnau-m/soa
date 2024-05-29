@@ -4,6 +4,16 @@
 char buff[24];
 
 int pid;
+int frames = 1;
+int frames2 = 0;
+
+int calc_fps()
+{
+    int time = gettime();
+    if (time < 10)
+        return 0;
+    return frames / (time / 18);
+}
 
 void print_map()
 {
@@ -28,29 +38,20 @@ main(void)
 
     int pid = fork();
 
-    if (pid == 0)
+    while (pid)
     {
-        int frame = 0;
-        int newTime = 0;
-        int time = 0;
-        while (1)
+
+        frames++;
+        print_map();
+        if (frames2 != frames)
         {
-
-            print_map();
-
-            frame++;
-            newTime = gettime();
-            if (newTime % 18 == 0 && newTime != time)
-            {
-                gotoxy(0, 15);
-                write(1, "FPS: ", strlen("FPS: "));
-                int diff = newTime - time;
-                itoa(frame, buff);
-                write(1, buff, strlen(buff));
-                write(1, " ", strlen(" "));
-                frame = 0;
-                time = newTime;
-            }
+            frames2 = frames;
+            gotoxy(0, 15);
+            write(1, "FPS: ", strlen("FPS: "));
+            int fps = calc_fps();
+            itoa(fps, buff);
+            write(1, buff, strlen(buff));
+            write(1, " ", 1);
         }
     }
 
